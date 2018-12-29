@@ -25,7 +25,7 @@ namespace Grib.Api
     /// Light wrapper for streams. The current implementation is slower than 
     /// reading from file, but is provided for convenience.
     /// </summary>
-    public class GribStream: IEnumerable<GribMessage>
+    internal class GribStream: IEnumerable<GribMessage>
     {
         static readonly byte[] GRIB_MSG_START = { 0x47, 0x52, 0x49, 0x42 };
         static readonly byte[] GRIB_MSG_END_GTS = { 0x0D, 0x0D, 0x0A, 0x03 };
