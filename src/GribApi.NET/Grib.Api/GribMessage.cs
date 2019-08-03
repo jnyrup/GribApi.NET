@@ -1024,6 +1024,10 @@ namespace Grib.Api
                     GribApiProxy.GribMultiHandleDelete(mh);
                     this.BufferHandle.Free();
                 }
+                else if (this.Handle != null)
+                {
+                    this.Handle.Dispose();
+               }
             }
         }
 
