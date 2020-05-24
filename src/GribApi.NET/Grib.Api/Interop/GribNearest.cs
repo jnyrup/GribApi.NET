@@ -30,20 +30,20 @@ namespace Grib.Api.Interop
         public SWIGTYPE_p_grib_nearest Nearest = null;
         public GribHandle Handle = null;
 
-        internal GribNearest (SWIGTYPE_p_grib_nearest nearest, GribHandle handle) : base()
+        internal GribNearest(SWIGTYPE_p_grib_nearest nearest, GribHandle handle) : base()
         {
-            this.Reference = SWIGTYPE_p_grib_nearest.getCPtr(nearest);
-            this.Nearest = nearest;
-            this.Handle = handle;
+            Reference = SWIGTYPE_p_grib_nearest.getCPtr(nearest);
+            Nearest = nearest;
+            Handle = handle;
         }
 
-        protected override void OnDispose (bool disposing)
+        protected override void OnDispose(bool disposing)
         {
-            if (this.pReference != IntPtr.Zero)
+            if (pReference != IntPtr.Zero)
             {
                 GribApiProxy.GribNearestDelete(Nearest);
-                this.Nearest = null;
-                this.Handle = null;
+                Nearest = null;
+                Handle = null;
             }
         }
 
@@ -56,7 +56,7 @@ namespace Grib.Api.Interop
         /// a call to another you can use POINT. The same is valid for the grid. Flags can be used together
         /// doing a bitwise OR. The distances are given in kilometres.</param>
         /// <returns>An array of the nearest four coordinates sorted by distance.</returns>
-        public GridNearestCoordinate[] FindNearestCoordinates (double latitude, double longitude, GribNearestToSame searchType = GribNearestToSame.POINT)
+        public GridNearestCoordinate[] FindNearestCoordinates(double latitude, double longitude, GribNearestToSame searchType = GribNearestToSame.POINT)
         {
             var latitudes = new double[] { 0, 0, 0, 0 };
             var longitudes = new double[] { 0, 0, 0, 0 };
@@ -64,8 +64,8 @@ namespace Grib.Api.Interop
             var values = new double[] { 0, 0, 0, 0 };
             var indexes = new int[] { 0, 0, 0, 0 };
 
-            Interop.SizeT len = 4;
-            Interop.SWIG.GribApiProxy.GribNearestFind(this.Nearest, this.Handle, latitude, longitude, (uint)searchType,
+            SizeT len = 4;
+            GribApiProxy.GribNearestFind(Nearest, Handle, latitude, longitude, (uint)searchType,
                                                     latitudes, longitudes, values, distances,
                                                     indexes, ref len);
 
@@ -123,11 +123,10 @@ namespace Grib.Api.Interop
         //	return vals;
         //}
 
-        public static GribNearest Create (GribHandle handle)
+        public static GribNearest Create(GribHandle handle)
         {
-            int err = 0;
 
-            var nearest = GribApiProxy.GribNearestNew(handle, out err);
+            var nearest = GribApiProxy.GribNearestNew(handle, out int err);
 
             if (err != 0)
             {

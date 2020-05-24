@@ -26,10 +26,7 @@ namespace Grib.Api
     /// </summary>
     public class GribKeyValue
     {
-        const uint MAX_KEY_LEN = 255;
-        const uint MAX_VAL_LEN = 1024;
-
-        private GribHandle _handle;
+        private readonly GribHandle _handle;
         private readonly static GribValueType[] _asStringBlacklist = { GribValueType.IntArray,
                                                                        GribValueType.DoubleArray,
                                                                        GribValueType.Bytes };
@@ -39,7 +36,7 @@ namespace Grib.Api
         /// </summary>
         /// <param name="handle">The handle.</param>
         /// <param name="keyName">Name of the key.</param>
-        internal GribKeyValue (GribHandle handle, string keyName)
+        internal GribKeyValue(GribHandle handle, string keyName)
         {
             _handle = handle;
             Key = keyName;
@@ -49,9 +46,10 @@ namespace Grib.Api
         /// Gets the key's value.
         /// </summary>
         /// <returns></returns>
-        public virtual string AsString ()
+        public virtual string AsString()
         {
-            if (!IsDefined || _asStringBlacklist.Contains(NativeType)) { return String.Empty; }
+            if (!IsDefined || _asStringBlacklist.Contains(NativeType))
+            { return string.Empty; }
 
             SizeT ptLen = 0;
             string valueKey = Key;
@@ -74,7 +72,7 @@ namespace Grib.Api
         /// Sets the key's value.
         /// </summary>
         /// <param name="newValue">The new value.</param>
-        public virtual void AsString (string newValue)
+        public virtual void AsString(string newValue)
         {
             AssertTypeSafe(GribValueType.String);
 
@@ -86,7 +84,7 @@ namespace Grib.Api
         /// Gets the key's value in bytes.
         /// </summary>
         /// <returns></returns>
-        public byte[] AsBytes ()
+        public byte[] AsBytes()
         {
             AssertTypeSafe(GribValueType.Bytes);
 
@@ -103,7 +101,7 @@ namespace Grib.Api
         /// Sets the key's value in bytes.
         /// </summary>
         /// <param name="newBytes">The new bytes.</param>
-        public void AsBytes (byte[] newBytes)
+        public void AsBytes(byte[] newBytes)
         {
             AssertTypeSafe(GribValueType.Bytes);
 
@@ -115,13 +113,12 @@ namespace Grib.Api
         /// Gets the key's value.
         /// </summary>
         /// <returns></returns>
-        public virtual int AsInt ()
+        public virtual int AsInt()
         {
             AssertTypeSafe(GribValueType.Int);
 
-            int val;
 
-            GribApiProxy.GribGetLong(_handle, Key, out val);
+            GribApiProxy.GribGetLong(_handle, Key, out int val);
 
             return val;
         }
@@ -130,7 +127,7 @@ namespace Grib.Api
         /// Sets the key's value.
         /// </summary>
         /// <param name="newValue">The new value.</param>
-        public virtual void AsInt (int newValue)
+        public virtual void AsInt(int newValue)
         {
             AssertTypeSafe(GribValueType.Int);
 
@@ -142,7 +139,7 @@ namespace Grib.Api
         /// Call ::AsXArray(alteredArray) to set new values.
         /// </summary>
         /// <returns>Returns a *copy* of the key's array.</returns>
-        public virtual int[] AsIntArray ()
+        public virtual int[] AsIntArray()
         {
             AssertTypeSafe(GribValueType.IntArray);
 
@@ -159,7 +156,7 @@ namespace Grib.Api
         /// Sets the key's value.
         /// </summary>
         /// <param name="newValues">The new values.</param>
-        public virtual void AsIntArray (int[] newValues)
+        public virtual void AsIntArray(int[] newValues)
         {
             AssertTypeSafe(GribValueType.IntArray);
 
@@ -170,15 +167,14 @@ namespace Grib.Api
         /// Gets the key's value.
         /// </summary>
         /// <returns></returns>
-        public virtual double AsDouble ()
+        public virtual double AsDouble()
         {
             string valueKey = BuildTokenForDouble();
 
             AssertTypeSafe(valueKey, NativeTypeForKey(valueKey), GribValueType.Double);
 
-            double val;
 
-            GribApiProxy.GribGetDouble(_handle, valueKey, out val);
+            GribApiProxy.GribGetDouble(_handle, valueKey, out double val);
 
             return val;
         }
@@ -187,7 +183,7 @@ namespace Grib.Api
         /// Sets the key's value.
         /// </summary>
         /// <param name="newValue">The new value.</param>
-        public virtual void AsDouble (double newValue)
+        public virtual void AsDouble(double newValue)
         {
             string valueKey = BuildTokenForDouble();
 
@@ -201,7 +197,7 @@ namespace Grib.Api
         /// Call ::AsXArray(alteredArray) to set new values.
         /// </summary>
         /// <returns>Returns a *copy* of the key's array.</returns>
-        public virtual double[] AsDoubleArray ()
+        public virtual double[] AsDoubleArray()
         {
             AssertTypeSafe(GribValueType.DoubleArray);
 
@@ -219,7 +215,7 @@ namespace Grib.Api
         /// </summary>
         /// <param name="newValues">The new values.</param>
         /// <param name="force">if set to <c>true</c> [force].</param>
-        public virtual void AsDoubleArray (double[] newValues, bool force = false)
+        public virtual void AsDoubleArray(double[] newValues, bool force = false)
         {
             if (force)
             {
@@ -237,7 +233,7 @@ namespace Grib.Api
         /// Builds the token for accesing/mutating double values, accounting for degree conversions.
         /// </summary>
         /// <returns></returns>
-        protected string BuildTokenForDouble ()
+        protected string BuildTokenForDouble()
         {
             string valueKey = Key;
 
@@ -250,14 +246,14 @@ namespace Grib.Api
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents the value as a string.
+        /// Returns a <see cref="string" /> that represents the value as a string.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" /> that represents the value as a string.
+        /// A <see cref="string" /> that represents the value as a string.
         /// </returns>
-        public override string ToString ()
+        public override string ToString()
         {
-            return String.Format("<{0}> {1}: {2}", Enum.GetName(typeof(GribValueType), this.NativeType), this.Key, this.AsString());
+            return string.Format("<{0}> {1}: {2}", Enum.GetName(typeof(GribValueType), NativeType), Key, AsString());
         }
 
         /// <summary>
@@ -266,13 +262,12 @@ namespace Grib.Api
         /// to coordinates.
         /// </summary>
         /// <returns></returns>
-        public bool CanConvertToDegrees
+        public bool CanConvertToDegrees => GetCanConvertToDegrees();
+
+        private bool GetCanConvertToDegrees()
         {
-            get
-            {
-                string degreeToken = Key.EndsWith("InDegrees") ? Key : Key + "InDegrees";
-                return GribApiProxy.GribIsDefined(_handle, degreeToken);
-            }
+            string degreeToken = Key.EndsWith("InDegrees") ? Key : Key + "InDegrees";
+            return GribApiProxy.GribIsDefined(_handle, degreeToken);
         }
 
         /// <summary>
@@ -289,21 +284,18 @@ namespace Grib.Api
         /// <value>
         /// <c>true</c> if this value is missing; otherwise, <c>false</c>.
         /// </value>
-        public bool IsMissing
+        public bool IsMissing => GetIsMissing();
+
+        private bool GetIsMissing()
         {
-            get
+            bool isMissing = GribApiProxy.GribIsMissing(_handle, Key, out int err);
+
+            if (err != 0)
             {
-                int err;
-
-                bool isMissing = GribApiProxy.GribIsMissing(_handle, Key, out err);
-
-                if (err != 0)
-                {
-                    throw GribApiException.Create(err);
-                }
-
-                return isMissing;
+                throw GribApiException.Create(err);
             }
+
+            return isMissing;
         }
 
         /// <summary>
@@ -312,13 +304,7 @@ namespace Grib.Api
         /// <value>
         /// <c>true</c> if key is defined; otherwise, <c>false</c>.
         /// </value>
-        public bool IsDefined
-        {
-            get
-            {
-                return GribKeyValue.IsKeyDefined(_handle, Key);
-            }
-        }
+        public bool IsDefined => IsKeyDefined(_handle, Key);
 
         /// <summary>
         /// Return true if the key name exists (is defined) in the grib message.
@@ -326,7 +312,7 @@ namespace Grib.Api
         /// <param name="handle"></param>
         /// <param name="keyName"></param>
         /// <returns></returns>
-        public static bool IsKeyDefined (GribHandle handle, string keyName)
+        public static bool IsKeyDefined(GribHandle handle, string keyName)
         {
             return GribApiProxy.GribIsDefined(handle, keyName);
         }
@@ -337,30 +323,29 @@ namespace Grib.Api
         /// <value>
         /// The type of the native.
         /// </value>
-        public virtual GribValueType NativeType
+        public virtual GribValueType NativeType => GetNativeType();
+
+        private GribValueType GetNativeType()
         {
-            get
+            GribValueType nativeType = NativeTypeForKey(Key);
+
+            // int[] and double[] values are return as int and double, so
+            // determine if the value is an array
+            if (nativeType == GribValueType.Int ||
+                nativeType == GribValueType.Double)
             {
-                GribValueType nativeType = NativeTypeForKey(Key);
+                SizeT sz = 0;
+                GribApiProxy.GribGetSize(_handle, Key, ref sz);
 
-                // int[] and double[] values are return as int and double, so
-                // determine if the value is an array
-                if (nativeType == GribValueType.Int ||
-                    nativeType == GribValueType.Double)
+                if (sz > 1)
                 {
-                    SizeT sz = 0;
-                    GribApiProxy.GribGetSize(_handle, Key, ref sz);
-
-                    if (sz > 1)
-                    {
-                        nativeType = (nativeType == GribValueType.Int) ?
-                                        GribValueType.IntArray :
-                                        GribValueType.DoubleArray;
-                    }
+                    nativeType = (nativeType == GribValueType.Int)
+                        ? GribValueType.IntArray
+                        : GribValueType.DoubleArray;
                 }
-
-                return nativeType;
             }
+
+            return nativeType;
         }
 
         /// <summary>
@@ -369,24 +354,17 @@ namespace Grib.Api
         /// <value>
         /// <c>true</c> if this instance is read only; otherwise, <c>false</c>.
         /// </value>
-        public bool IsReadOnly
-        {
-            get
-            {
-                return GribApiNative.GribKeyIsReadOnly(_handle.Reference, Key);
-            }
-        }
+        public bool IsReadOnly => GribApiNative.GribKeyIsReadOnly(_handle.Reference, Key);
 
         /// <summary>
         /// Gets an enum describing a key's representation within the message.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        private GribValueType NativeTypeForKey (string key)
+        private GribValueType NativeTypeForKey(string key)
         {
-            int type = 0;
 
-            GribApiProxy.GribGetNativeType(_handle, key, out type);
+            GribApiProxy.GribGetNativeType(_handle, key, out int type);
 
             return (GribValueType)type;
         }
@@ -395,9 +373,9 @@ namespace Grib.Api
         /// Tests for type safety when accessing this value.
         /// </summary>
         /// <param name="requestedType">The expected type.</param>
-        private void AssertTypeSafe (GribValueType requestedType)
+        private void AssertTypeSafe(GribValueType requestedType)
         {
-            GribKeyValue.AssertTypeSafe(Key, requestedType, NativeType);
+            AssertTypeSafe(Key, requestedType, NativeType);
         }
 
         /// <summary>
@@ -407,11 +385,11 @@ namespace Grib.Api
         /// <param name="requestedType">The requested type.</param>
         /// <param name="actualType">The actual type.</param>
         /// <exception cref="GribValueTypeException"></exception>
-        private static void AssertTypeSafe (string key, GribValueType requestedType, GribValueType actualType)
+        private static void AssertTypeSafe(string key, GribValueType requestedType, GribValueType actualType)
         {
             if (requestedType != actualType)
             {
-                throw new GribValueTypeException(String.Format("Invalid type conversion. Key {0} is GRIB type {1}",
+                throw new GribValueTypeException(string.Format("Invalid type conversion. Key {0} is GRIB type {1}",
                                                                 key, actualType.AsString()));
             }
         }

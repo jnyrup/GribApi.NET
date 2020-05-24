@@ -41,16 +41,17 @@ namespace Grib.Api.Interop
         /// Initializes a new instance of the <see cref="SizeT"/> struct.
         /// </summary>
         /// <param name="val">The value.</param>
-        private SizeT (UIntPtr val) : this()
+        private SizeT(UIntPtr val) : this()
         {
             Value = val;
         }
 
+#pragma warning disable IDE0051 // Remove unused private members
         /// <summary>
         /// Initializes a new instance of the <see cref="SizeT"/> struct.
         /// </summary>
         /// <param name="val">The value.</param>
-        private SizeT (uint val = 0)
+        private SizeT(uint val = 0)
             : this((UIntPtr)val)
         {
         }
@@ -59,10 +60,11 @@ namespace Grib.Api.Interop
         /// Initializes a new instance of the <see cref="SizeT"/> struct.
         /// </summary>
         /// <param name="val">The value.</param>
-        private SizeT (int val)
+        private SizeT(int val)
             : this((UIntPtr)val)
         {
         }
+#pragma warning restore IDE0051 // Remove unused private members
 
         /// <summary>
         /// Gets the size of the value's container. 4 on x86, 8 on x64.
@@ -70,13 +72,7 @@ namespace Grib.Api.Interop
         /// <value>
         /// The size.
         /// </value>
-        public static int Size
-        {
-            get
-            {
-                return Marshal.SizeOf(UIntPtr.Zero);
-            }
-        }
+        public static int Size => Marshal.SizeOf(UIntPtr.Zero);
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="UIntPtr"/> to <see cref="SizeT"/>.
@@ -85,57 +81,57 @@ namespace Grib.Api.Interop
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator SizeT (UIntPtr s)
+        public static implicit operator SizeT(UIntPtr s)
         {
             return new SizeT(s);
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="UInt32"/> to <see cref="SizeT"/>.
+        /// Performs an implicit conversion from <see cref="uint"/> to <see cref="SizeT"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator SizeT (UInt32 s)
+        public static implicit operator SizeT(uint s)
         {
             return new SizeT((UIntPtr)s);
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="UInt64"/> to <see cref="SizeT"/>.
+        /// Performs an explicit conversion from <see cref="ulong"/> to <see cref="SizeT"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static explicit operator SizeT (UInt64 s)
+        public static explicit operator SizeT(ulong s)
         {
             return new SizeT((UIntPtr)s);
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Int32"/> to <see cref="SizeT"/>.
+        /// Performs an explicit conversion from <see cref="int"/> to <see cref="SizeT"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static explicit operator SizeT (Int32 s)
+        public static explicit operator SizeT(int s)
         {
-            return new SizeT((UIntPtr) s);
+            return new SizeT((UIntPtr)s);
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="Int64"/> to <see cref="SizeT"/>.
+        /// Performs an explicit conversion from <see cref="long"/> to <see cref="SizeT"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static explicit operator SizeT (Int64 s)
+        public static explicit operator SizeT(long s)
         {
-            return new SizeT((UIntPtr) s);
+            return new SizeT((UIntPtr)s);
         }
 
         /// <summary>
@@ -145,57 +141,57 @@ namespace Grib.Api.Interop
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator UIntPtr (SizeT s)
+        public static implicit operator UIntPtr(SizeT s)
         {
             return s.Value;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SizeT"/> to <see cref="UInt32"/>.
+        /// Performs an implicit conversion from <see cref="SizeT"/> to <see cref="uint"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator UInt32 (SizeT s)
+        public static implicit operator uint(SizeT s)
         {
             return s.Value.ToUInt32();
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SizeT"/> to <see cref="UInt64"/>.
+        /// Performs an implicit conversion from <see cref="SizeT"/> to <see cref="ulong"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator UInt64 (SizeT s)
+        public static implicit operator ulong(SizeT s)
         {
             return s.Value.ToUInt64();
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SizeT"/> to <see cref="Int32"/>.
+        /// Performs an explicit conversion from <see cref="SizeT"/> to <see cref="int"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static explicit operator Int32 (SizeT s)
+        public static explicit operator int(SizeT s)
         {
-            return (Int32) s.Value.ToUInt32();
+            return (int)s.Value.ToUInt32();
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="SizeT"/> to <see cref="Int64"/>.
+        /// Performs an explicit conversion from <see cref="SizeT"/> to <see cref="long"/>.
         /// </summary>
         /// <param name="s">The s.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static explicit operator Int64 (SizeT s)
+        public static explicit operator long(SizeT s)
         {
-            return (Int64) s.Value.ToUInt64();
+            return (long)s.Value.ToUInt64();
         }
 
         /// <summary>
@@ -206,7 +202,7 @@ namespace Grib.Api.Interop
         /// </returns>
         public override int GetHashCode()
         {
-            return this.Value.GetHashCode();
+            return Value.GetHashCode();
         }
 
         /// <summary>
@@ -236,11 +232,11 @@ namespace Grib.Api.Interop
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// Determines whether the specified <see cref="object" />, is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        ///   <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)
         {
@@ -248,7 +244,7 @@ namespace Grib.Api.Interop
 
             if (obj != null && typeof(SizeT).IsAssignableFrom(obj.GetType()))
             {
-                isEqual = this == (SizeT) obj;
+                isEqual = this == (SizeT)obj;
             }
 
             return isEqual;

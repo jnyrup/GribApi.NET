@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Grib.Api.Templates
+﻿namespace Grib.Api.Templates
 {
-    abstract class ParameterNumbers
+    internal abstract class ParameterNumbers
     {
         // TODO add constants
 

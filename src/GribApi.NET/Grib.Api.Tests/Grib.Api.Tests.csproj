@@ -1,233 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D52B30F9-A9C4-4B78-A9FC-A706197417EB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Grib.Api.Tests</RootNamespace>
-    <AssemblyName>Grib.Api.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net452</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <Platforms>x64;x86</Platforms>
+    <OutDir>..\..\..\bin\$(Platform)\$(Configuration)</OutDir>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NoWarn>1591</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\..\..\bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\..\..\bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Files.cs" />
-    <Compile Include="Get.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Set.cs" />
-    <Compile Include="Write.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="Setup.cs" />
+    <None Include="TestData\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Grib.Api\Grib.Api.csproj">
-      <Project>{9cc21630-ace4-4d14-93ba-e4e801ad2a91}</Project>
-      <Name>Grib.Api</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Grib.Api\Grib.Api.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>taskkill /f /t /im nunit-agent.exe /fi "memusage gt 2"
-taskkill /f /t /im nunit-agent-x86.exe /fi "memusage gt 2"</PreBuildEvent>
-  </PropertyGroup>
-  <ItemGroup>
-    <TestDataFiles Include="TestData\bad.grb" />
-    <TestDataFiles Include="TestData\bad.grib" />
-    <TestDataFiles Include="TestData\bad2.grib" />
-    <TestDataFiles Include="TestData\ccsds.grib2" />
-    <TestDataFiles Include="TestData\constant_field.grib1" />
-    <TestDataFiles Include="TestData\constant_field.grib2" />
-    <TestDataFiles Include="TestData\constant_width_bitmap.grib" />
-    <TestDataFiles Include="TestData\constant_width_boust_bitmap.grib" />
-    <TestDataFiles Include="TestData\ds.apt.bin" />
-    <TestDataFiles Include="TestData\empty.grb" />
-    <TestDataFiles Include="TestData\gen.grib" />
-    <TestDataFiles Include="TestData\gen_bitmap.grib" />
-    <TestDataFiles Include="TestData\gen_ext.grib" />
-    <TestDataFiles Include="TestData\gen_ext_bitmap.grib" />
-    <TestDataFiles Include="TestData\gen_ext_boust.grib" />
-    <TestDataFiles Include="TestData\gen_ext_boust_bitmap.grib" />
-    <TestDataFiles Include="TestData\gen_ext_spd_2.grib" />
-    <TestDataFiles Include="TestData\gen_ext_spd_2_bitmap.grib" />
-    <TestDataFiles Include="TestData\gen_ext_spd_2_boust_bitmap.grib" />
-    <TestDataFiles Include="TestData\gen_ext_spd_3.grib" />
-    <TestDataFiles Include="TestData\gen_ext_spd_3_boust_bitmap.grib" />
-    <TestDataFiles Include="TestData\gep10.t12z.pgrb2af78.grib2" />
-    <TestDataFiles Include="TestData\gfs.c255.grib2" />
-    <TestDataFiles Include="TestData\gfs_0p50_2015101500_003.grb" />
-    <TestDataFiles Include="TestData\GRIB.grb" />
-    <TestDataFiles Include="TestData\grid_ieee.grib" />
-    <TestDataFiles Include="TestData\gts.grib" />
-    <TestDataFiles Include="TestData\high_level_api.grib2" />
-    <TestDataFiles Include="TestData\index.grib" />
-    <TestDataFiles Include="TestData\in_copy.grib" />
-    <TestDataFiles Include="TestData\jpeg.grib2" />
-    <TestDataFiles Include="TestData\latlon.grib" />
-    <TestDataFiles Include="TestData\latlon_noread.grib" />
-    <TestDataFiles Include="TestData\lfpw.grib1" />
-    <TestDataFiles Include="TestData\lfpw.grib2" />
-    <TestDataFiles Include="TestData\missing.grib2" />
-    <TestDataFiles Include="TestData\missing_field.grib1" />
-    <TestDataFiles Include="TestData\mixed.grib" />
-    <TestDataFiles Include="TestData\MRMS.grib2" />
-    <TestDataFiles Include="TestData\MRMS2.grib2" />
-    <TestDataFiles Include="TestData\msl.octa.glob.grib1" />
-    <TestDataFiles Include="TestData\multi.grib2" />
-    <TestDataFiles Include="TestData\multi_created.grib2" />
-    <TestDataFiles Include="TestData\nam.grib2" />
-    <TestDataFiles Include="TestData\Pacific.wind.7days.grb" />
-    <TestDataFiles Include="TestData\pad.grib" />
-    <TestDataFiles Include="TestData\polar_stereo.grib2" />
-    <TestDataFiles Include="TestData\RawFileBadETOGrib.os" />
-    <TestDataFiles Include="TestData\reduced_gaussian_lsm.grib1" />
-    <TestDataFiles Include="TestData\reduced_gaussian_model_level.grib1" />
-    <TestDataFiles Include="TestData\reduced_gaussian_model_level.grib2" />
-    <TestDataFiles Include="TestData\reduced_gaussian_pressure_level.grib1" />
-    <TestDataFiles Include="TestData\reduced_gaussian_pressure_level.grib2" />
-    <TestDataFiles Include="TestData\reduced_gaussian_pressure_level_constant.grib1" />
-    <TestDataFiles Include="TestData\reduced_gaussian_pressure_level_constant.grib2" />
-    <TestDataFiles Include="TestData\reduced_gaussian_sub_area.grib1" />
-    <TestDataFiles Include="TestData\reduced_gaussian_sub_area.grib2" />
-    <TestDataFiles Include="TestData\reduced_gaussian_surface.grib1" />
-    <TestDataFiles Include="TestData\reduced_gaussian_surface.grib2" />
-    <TestDataFiles Include="TestData\reduced_gaussian_surface_jpeg.grib2" />
-    <TestDataFiles Include="TestData\reduced_latlon_surface.grib1" />
-    <TestDataFiles Include="TestData\reduced_latlon_surface.grib2" />
-    <TestDataFiles Include="TestData\reduced_latlon_surface_constant.grib1" />
-    <TestDataFiles Include="TestData\reduced_latlon_surface_constant.grib2" />
-    <TestDataFiles Include="TestData\reference_ensemble_mean.grib1" />
-    <TestDataFiles Include="TestData\reference_stdev.grib1" />
-    <TestDataFiles Include="TestData\regular_gaussian_model_level.grib1" />
-    <TestDataFiles Include="TestData\regular_gaussian_model_level.grib2" />
-    <TestDataFiles Include="TestData\regular_gaussian_pressure_level.grib1" />
-    <TestDataFiles Include="TestData\regular_gaussian_pressure_level.grib2" />
-    <TestDataFiles Include="TestData\regular_gaussian_pressure_level_constant.grib1" />
-    <TestDataFiles Include="TestData\regular_gaussian_pressure_level_constant.grib2" />
-    <TestDataFiles Include="TestData\regular_gaussian_surface.grib1" />
-    <TestDataFiles Include="TestData\regular_gaussian_surface.grib2" />
-    <TestDataFiles Include="TestData\regular_latlon_surface.grib1" />
-    <TestDataFiles Include="TestData\regular_latlon_surface.grib2" />
-    <TestDataFiles Include="TestData\regular_latlon_surface_constant.grib1" />
-    <TestDataFiles Include="TestData\regular_latlon_surface_constant.grib2" />
-    <TestDataFiles Include="TestData\row.grib" />
-    <TestDataFiles Include="TestData\sample.grib2" />
-    <TestDataFiles Include="TestData\satellite.grib" />
-    <TestDataFiles Include="TestData\second_ord_rbr.grib1" />
-    <TestDataFiles Include="TestData\simple.grib" />
-    <TestDataFiles Include="TestData\simple_bitmap.grib" />
-    <TestDataFiles Include="TestData\small_ensemble.grib1" />
-    <TestDataFiles Include="TestData\spectral_complex.grib1" />
-    <TestDataFiles Include="TestData\spherical_model_level.grib1" />
-    <TestDataFiles Include="TestData\spherical_model_level.grib2" />
-    <TestDataFiles Include="TestData\spherical_pressure_level.grib1" />
-    <TestDataFiles Include="TestData\spherical_pressure_level.grib2" />
-    <TestDataFiles Include="TestData\sst_globus0083.grib" />
-    <TestDataFiles Include="TestData\test.grib1" />
-    <TestDataFiles Include="TestData\test_file.grib2" />
-    <TestDataFiles Include="TestData\test_uuid.grib2" />
-    <TestDataFiles Include="TestData\tigge_af_ecmwf.grib2" />
-    <TestDataFiles Include="TestData\tigge_cf_ecmwf.grib2" />
-    <TestDataFiles Include="TestData\tigge_ecmwf.grib2" />
-    <TestDataFiles Include="TestData\tigge_pf_ecmwf.grib2" />
-    <TestDataFiles Include="TestData\time.grb" />
-    <TestDataFiles Include="TestData\timeRangeIndicator_0.grib" />
-    <TestDataFiles Include="TestData\timeRangeIndicator_10.grib" />
-    <TestDataFiles Include="TestData\timeRangeIndicator_5.grib" />
-    <TestDataFiles Include="TestData\tp_ecmwf.grib" />
-    <TestDataFiles Include="TestData\uv.grib2" />
-    <TestDataFiles Include="TestData\v.grib2" />
-    <TestDataFiles Include="TestData\weird.grb" />
-    <TestDataFiles Include="TestData\WRFPRS_NAM_00z_d01.000.multifield.grib2" />
-    <TestDataFiles Include="TestData\Z_NWGD_C_BABJ.GRB2" />
-  </ItemGroup>
-  <Target Name="BeforeClean">
-    <Message Text="Removing test data..." Importance="high" />
-    <RemoveDir Directories="$(OutDir)TestData" ContinueOnError="true" />
-  </Target>
-  <Target Name="AfterBuild">
-    <Message Text="Copying test data..." Importance="high" />
-    <Copy SourceFiles="@(TestDataFiles)" DestinationFolder="$(OutDir)TestData\" SkipUnchangedFiles="true" />
-  </Target>
+
 </Project>

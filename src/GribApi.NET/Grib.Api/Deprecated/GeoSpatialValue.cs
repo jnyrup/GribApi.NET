@@ -27,12 +27,12 @@ namespace Grib.Api
         public double Value { get; set; }
         public bool IsMissing { get; private set; }
 
-        public GeoSpatialValue(double lat, double lon, double val, bool isMissing) :this()
+        public GeoSpatialValue(double lat, double lon, double val, bool isMissing) : this()
         {
-            this.Latitude = lat;
-            this.Longitude = lon;
-            this.Value = val;
-            this.IsMissing = isMissing;
+            Latitude = lat;
+            Longitude = lon;
+            Value = val;
+            IsMissing = isMissing;
         }
 
         /// <summary>
@@ -40,35 +40,35 @@ namespace Grib.Api
         /// </summary>
         /// <param name="that">The that.</param>
         /// <returns></returns>
-        public bool Equals (GeoSpatialValue that)
+        public bool Equals(GeoSpatialValue that)
         {
-            return (this.Latitude == that.Latitude) &&
-                (this.Longitude == that.Longitude) && 
-                (this.Value == that.Value);
+            return (Latitude == that.Latitude) &&
+                (Longitude == that.Longitude) &&
+                (Value == that.Value);
         }
 
-          /// <summary>
-          /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
-          /// </summary>
-          /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
-          /// <returns>
-          ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
-          /// </returns>
-          public override bool Equals (object obj)
-          {
-              return (obj is GeoSpatialValue) && this.Equals((GeoSpatialValue)obj);
-          }
- 
-          /// <summary>
-          /// Returns a hash code for this instance.
-          /// </summary>
-          /// <returns>
-          /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-          /// </returns>
-          public override int GetHashCode()
-          {
-              return this.Latitude.GetHashCode() ^ this.Longitude.GetHashCode() ^ this.Value.GetHashCode();
-          }
+        /// <summary>
+        /// Determines whether the specified <see cref="object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            return (obj is GeoSpatialValue) && Equals((GeoSpatialValue)obj);
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return Latitude.GetHashCode() ^ Longitude.GetHashCode() ^ Value.GetHashCode();
+        }
 
         /// <summary>
         /// Implements the operator ==.
@@ -80,7 +80,7 @@ namespace Grib.Api
         /// </returns>
         public static bool operator ==(GeoSpatialValue a, GeoSpatialValue b)
         {
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }

@@ -18,14 +18,14 @@ namespace Grib.Api.Interop
 {
     public class GribApiException : Exception
     {
-        protected GribApiException (string msg) : base(msg) { }
+        protected GribApiException(string msg) : base(msg) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GribApiException"/> class.
         /// </summary>
         /// <param name="msg">The MSG.</param>
         /// <param name="innerException">The inner exception.</param>
-        public GribApiException (string msg, Exception innerException = null) : base(msg, innerException)
+        public GribApiException(string msg, Exception innerException = null) : base(msg, innerException)
         {
         }
 
@@ -34,7 +34,7 @@ namespace Grib.Api.Interop
         /// </summary>
         /// <param name="errCode">The error code.</param>
         /// <returns></returns>
-        public static GribApiException Create (int errCode)
+        public static GribApiException Create(int errCode)
         {
             int index = Math.Abs(errCode);
 
@@ -133,16 +133,16 @@ namespace Grib.Api.Interop
 
     public class GribApiFatalException : Exception
     {
-        public GribApiFatalException () : this("") { }
+        public GribApiFatalException() : this("") { }
 
-        public GribApiFatalException (string msg) : base(msg) { }
+        public GribApiFatalException(string msg) : base(msg) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GribApiException"/> class.
         /// </summary>
         /// <param name="msg">The MSG.</param>
         /// <param name="innerException">The inner exception.</param>
-		public GribApiFatalException (string msg, Exception innerException = null)
+		public GribApiFatalException(string msg, Exception innerException = null)
                     : base(msg, innerException)
         {
         }

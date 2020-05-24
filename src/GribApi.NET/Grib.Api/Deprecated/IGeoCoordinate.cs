@@ -16,7 +16,7 @@ using System;
 namespace Grib.Api
 {
     [Obsolete("This API is no longer supported. Please use IGridCoordinate instead.", true)]
-    interface IGeoCoordinate
+    internal interface IGeoCoordinate
     {
         double Latitude { get; set; }
         double Longitude { get; set; }

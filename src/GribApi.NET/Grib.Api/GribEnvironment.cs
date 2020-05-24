@@ -29,25 +29,28 @@ namespace Grib.Api
     /// </remarks>
     public static class GribEnvironment
     {
-        private static AutoRef _libHandle;
-        private static object _initLock = new object();
+#pragma warning disable IDE0052 // TODO: not sure if we can remove this?
+        private static readonly AutoRef _libHandle;
+#pragma warning restore IDE0052 
+        private static readonly object _initLock = new object();
 
 
-        static GribEnvironment ()
+        static GribEnvironment()
         {
-            if (Initialized) { return; }
+            if (Initialized)
+            { return; }
 
             lock (_initLock)
             {
                 Initialized = true;
 
-                if (String.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GRIB_API_NO_ABORT")))
+                if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GRIB_API_NO_ABORT")))
                 {
                     NoAbort = true;
                 }
 
                 string definitions = Environment.GetEnvironmentVariable("GRIB_DEFINITION_PATH");
-                if (String.IsNullOrWhiteSpace(definitions))
+                if (string.IsNullOrWhiteSpace(definitions))
                 {
                     GribEnvironmentLoadHelper.TryFindDefinitions(out definitions);
                 }
@@ -71,7 +74,7 @@ namespace Grib.Api
         /// to ensure the native libraries are bootstrapped.
         /// </summary>
         /// <exception cref="System.ComponentModel.Win32Exception"></exception>
-        public static void Init ()
+        public static void Init()
         {
             // empty hook for static ctor
         }
@@ -84,7 +87,7 @@ namespace Grib.Api
         /// or
         /// Could not locate 'definitions/boot.def'.
         /// </exception>
-        private static void AssertValidEnvironment (string definitions)
+        private static void AssertValidEnvironment(string definitions)
         {
             string[] paths = definitions.Split(new[] { ';' });
             string existingPath = "";
@@ -95,7 +98,8 @@ namespace Grib.Api
                 existingPath = path;
                 exists = Directory.Exists(path);
 
-                if (exists) { break; }
+                if (exists)
+                { break; }
             }
 
             if (!exists)
@@ -114,7 +118,7 @@ namespace Grib.Api
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="val">The value.</param>
-        private static void PutEnvVar (string name, string val)
+        private static void PutEnvVar(string name, string val)
         {
             Environment.SetEnvironmentVariable(name, val, EnvironmentVariableTarget.Process);
             Win32._putenv_s(name, val);
@@ -130,14 +134,8 @@ namespace Grib.Api
         /// </value>
         public static string JpegDumpPath
         {
-            get
-            {
-                return Environment.GetEnvironmentVariable("GRIB_DUMP_JPG_FILE");
-            }
-            set
-            {
-                PutEnvVar("GRIB_DUMP_JPG_FILE", value);
-            }
+            get => Environment.GetEnvironmentVariable("GRIB_DUMP_JPG_FILE");
+            set => PutEnvVar("GRIB_DUMP_JPG_FILE", value);
         }
 
         /// <summary>
@@ -148,18 +146,17 @@ namespace Grib.Api
         /// </value>
         public static bool NoAbort
         {
-            get
-            {
-                return Environment.GetEnvironmentVariable("GRIB_API_NO_ABORT") == "1";
-            }
-            set
-            {
-                string val = value ? "1" : "0";
-                PutEnvVar("GRIB_API_NO_ABORT", val);
+            get => Environment.GetEnvironmentVariable("GRIB_API_NO_ABORT") == "1";
+            set => SetNoAbort(value);
+        }
 
-                val = value ? "0" : "1";
-                PutEnvVar("GRIB_API_FAIL_IF_LOG_MESSAGE", val);
-            }
+        private static void SetNoAbort(bool value)
+        {
+            string val = value ? "1" : "0";
+            PutEnvVar("GRIB_API_NO_ABORT", val);
+
+            val = value ? "0" : "1";
+            PutEnvVar("GRIB_API_FAIL_IF_LOG_MESSAGE", val);
         }
 
         /// <summary>
@@ -170,16 +167,10 @@ namespace Grib.Api
         /// </value>
         public static string DefinitionsPath
         {
-            get
-            {
-                return _definitions;
-            }
-            set
-            {
-                GribApiNative.SetDefaultDefinitionsPath(value);
-            }
+            get => _definitions;
+            set => GribApiNative.SetDefaultDefinitionsPath(value);
         }
-        private static string _definitions = "";
+        private static readonly string _definitions = "";
 
 
         /// <summary>
@@ -190,14 +181,8 @@ namespace Grib.Api
         /// </value>
         public static string SamplesPath
         {
-            get
-            {
-                return Environment.GetEnvironmentVariable("GRIB_SAMPLES_PATH") + "";
-            }
-            set
-            {
-                PutEnvVar("GRIB_SAMPLES_PATH", value);
-            }
+            get => Environment.GetEnvironmentVariable("GRIB_SAMPLES_PATH") + "";
+            set => PutEnvVar("GRIB_SAMPLES_PATH", value);
         }
 
         /// <summary>
@@ -206,19 +191,21 @@ namespace Grib.Api
         /// <value>
         /// The grib API version.
         /// </value>
-        public static string GribApiVersion
+        public static string GribApiVersion => GetGribApiVersion();
+
+        private static string GetGribApiVersion()
         {
-            get
+            if (!Initialized)
             {
-                if (!Initialized) { Init(); }
-
-                string version = GribApiProxy.GribGetApiVersion().ToString();
-                string major = version[0].ToString();
-                string minor = Int32.Parse(version.Substring(1, 2)).ToString();
-                string patch = Int32.Parse(version.Substring(3, 2)).ToString();
-
-                return String.Join(".", major, minor, patch);
+                Init();
             }
+
+            string version = GribApiProxy.GribGetApiVersion().ToString();
+            string major = version[0].ToString();
+            string minor = int.Parse(version.Substring(1, 2)).ToString();
+            string patch = int.Parse(version.Substring(3, 2)).ToString();
+
+            return string.Join(".", major, minor, patch);
         }
 
         /// <summary>

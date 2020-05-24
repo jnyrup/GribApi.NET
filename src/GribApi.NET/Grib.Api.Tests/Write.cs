@@ -1,10 +1,8 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace Grib.Api.Tests
 {
@@ -13,7 +11,7 @@ namespace Grib.Api.Tests
     {
 
         [Test, Timeout(2000)]
-        public void TestWrite ()
+        public void TestWrite()
         {
             if (File.Exists(Settings.OUT_GRIB))
             {
@@ -25,7 +23,7 @@ namespace Grib.Api.Tests
 
             using (var readFile = new GribFile(Settings.PACIFIC_WIND))
             {
-                var msg = readFile.First();
+                using var msg = readFile.First();
                 Assert.AreNotEqual(33, msg["latitudeOfFirstGridPoint"].AsDouble());
                 msg["latitudeOfFirstGridPoint"].AsDouble(33);
                 valCount = msg.ValuesCount;
@@ -34,7 +32,7 @@ namespace Grib.Api.Tests
 
             using (var readFile = new GribFile(Settings.OUT_GRIB))
             {
-                var msg = readFile.First();
+                using var msg = readFile.First();
                 count = readFile.MessageCount;
                 Assert.AreEqual(valCount, msg.ValuesCount);
                 Assert.AreEqual(count, readFile.MessageCount);
@@ -54,7 +52,7 @@ namespace Grib.Api.Tests
             }
         }
 
-        public void TestCompression (string grid)
+        public void TestCompression(string grid)
         {
             if (File.Exists(Settings.OUT_GRIB))
             {
@@ -62,16 +60,16 @@ namespace Grib.Api.Tests
             }
 
             int count = 0;
-            double val = Double.NaN;
+            double val = double.NaN;
 
             Dictionary<int, GridCoordinateValue> orig = new Dictionary<int, GridCoordinateValue>();
 
             using (var readFile = new GribFile(Settings.REDUCED_LATLON_GRB2))
             {
-                var msg = readFile.First();
+                using var msg = readFile.First();
                 count = msg.ValuesCount;
                 val = msg["latitudeOfFirstGridPoint"].AsDouble();
-                Assert.AreNotEqual(val, Double.NaN);
+                Assert.AreNotEqual(val, double.NaN);
                 Assert.AreNotEqual(msg["packingType"].AsString(), grid);
 
                 {
@@ -97,7 +95,8 @@ namespace Grib.Api.Tests
                         {
                             orig[x] = gsv;
                             y++;
-                            if (y == orig.Count) break;
+                            if (y == orig.Count)
+                                break;
                         }
                         x++;
                     }
@@ -124,7 +123,7 @@ namespace Grib.Api.Tests
 
             using (var readFile = new GribFile(Settings.OUT_GRIB))
             {
-                var msg = readFile.First();
+                using var msg = readFile.First();
                 Assert.AreEqual(count, msg.ValuesCount);
                 Assert.AreEqual(val, msg["latitudeOfFirstGridPoint"].AsDouble());
                 Assert.AreEqual(msg["packingType"].AsString(), grid);
@@ -142,13 +141,13 @@ namespace Grib.Api.Tests
 
 
         [Test, Timeout(2000)]
-        public void TestPng ()
+        public void TestPng()
         {
             TestCompression("grid_png");
         }
 
         [Test, Timeout(2000)]
-        public void TestJpeg ()
+        public void TestJpeg()
         {
             TestCompression("grid_jpeg");
         }
@@ -156,7 +155,7 @@ namespace Grib.Api.Tests
         //Function to get random number
         private static readonly Random getrandom = new Random();
 
-        public static int GetRandomNumber (int min, int max)
+        public static int GetRandomNumber(int min, int max)
         {
             return getrandom.Next(min, max);
         }

@@ -1,17 +1,28 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-	<title>GribApi.NET</title>
+    <title>GribApi.NET</title>
     <id>Grib.Api</id>
     <version>1.0.0</version>
     <authors>Eric Millin</authors>
     <owners>Eric Millin</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <projectUrl>https://github.com/0x1mason/GribApi.NET</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/0x1mason/GribApi.NET/master/build/GribApi.png</iconUrl>
+    <projectUrl>https://github.com/GribApiDotNet/GribApi.NET</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/GribApiDotNet/GribApi.NET/master/build/GribApi.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>GribApi.NET is a C# library for reading and writing GRIB 1 and 2 files. It wraps the European Centre for Medium Range Weather Forecasting's powerful C library, ecCodes. NOTE: This library requires the 2015 MSVC redistributable package (https://www.microsoft.com/en-us/download/details.aspx?id=48145)</description>
-    <copyright>Copyright 2017</copyright>
+    <description>GribApi.NET is a C# library for reading and writing GRIB 1 and 2 files. It wraps the European Centre for Medium Range Weather Forecasting's powerful C library, ecCodes. NOTE: This library requires the 2015 MSVC redistributable package (https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)</description>
+    <copyright>Copyright 2020</copyright>
     <tags>Geospatial Geo GRIB Weather Forecast Meteorology NOAA ECMWF</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5" />
+    </dependencies>
   </metadata>
+  <files>
+    <file src="build\" target="build" /> 
+    <file src="..\bin\x64\Release\Grib.Api\definitions\" target="Grib.Api\definitions\" />
+    <file src="..\bin\x86\Release\Grib.Api\lib\win\x86\Grib.Api.Native.dll" target="Grib.Api\lib\win\x86\Grib.Api.Native.dll" />
+    <file src="..\bin\x64\Release\Grib.Api\lib\win\x64\Grib.Api.Native.dll" target="Grib.Api\lib\win\x64\Grib.Api.Native.dll" />
+    <file src="..\bin\x64\Release\Grib.Api.dll" target="lib\net45\Grib.Api.dll" />
+    <file src="..\bin\x64\Release\Grib.Api.xml" target="lib\net45\Grib.Api.xml" />
+  </files>
 </package>

@@ -12,7 +12,7 @@ namespace Grib.Api.Tests
     public class Files
     {
         [Test, Timeout(2000)]
-        public void TestEnableMultField ()
+        public void TestEnableMultField()
         {
             Assert.IsTrue(GribContext.Default.EnableMultipleFieldMessages);
 
@@ -34,69 +34,51 @@ namespace Grib.Api.Tests
         }
 
         [Test, Timeout(2000)]
-        public void TestInvalidFiles ()
+        public void TestBadFile()
         {
-            try
+            Assert.Throws<FileLoadException>(() =>
             {
-                using (GribFile file = new GribFile(Settings.BAD))
-                {
-                    // shouldn't get here
-                    Assert.IsTrue(false);
-                }
-            }
-            catch (FileLoadException) { }
+                using GribFile file = new GribFile(Settings.BAD);
+            });
+        }
 
-            try
+        [Test, Timeout(2000)]
+        public void TestEmptyFile()
+        {
+            Assert.Throws<FileLoadException>(() =>
             {
-                using (GribFile file = new GribFile(Settings.EMPTY))
-                {
-                    // shouldn't get here
-                    Assert.IsTrue(false);
-                }
-            }
-            catch (FileLoadException) { }
+                using GribFile file = new GribFile(Settings.EMPTY);
+            });
         }
 
         [Test, Timeout(2000)]
         public void TestNullFile()
         {
-            try
+            Assert.Throws<ArgumentNullException>(() =>
             {
-                using (GribFile file = new GribFile(null))
-                {
-                    // shouldn't get here
-                    Assert.Fail();
-                }
-            }
-            catch (ArgumentNullException) { }
+                new GribFile(null);
+            });
         }
 
         [Test, Timeout(2000)]
         public void TestNonExistingFile()
         {
-            try
+            Assert.Throws<FileNotFoundException>(() =>
             {
-                using (GribFile file = new GribFile(string.Empty))
-                {
-                    // shouldn't get here
-                    Assert.Fail();
-                }
-            }
-            catch (FileNotFoundException) { }
+                new GribFile(string.Empty);
+            });
         }
 
         [Test, Timeout(5000)]
-        public void TestSteographic ()
+        public void TestSteographic()
         {
-            using (GribFile file = new GribFile(Settings.STEREO))
+            using GribFile file = new GribFile(Settings.STEREO);
+            GribMessage msg = file.First();
+            Assert.Greater(msg.ValuesCount, 1);
+            foreach (GridCoordinateValue gs in msg.GridCoordinateValues)
             {
-                GribMessage msg = file.First();
-                Assert.Greater(msg.ValuesCount, 1);
-                foreach (GridCoordinateValue gs in msg.GridCoordinateValues)
-                {
 
-                    Assert.Greater(gs.Latitude, 15);
-                }
+                Assert.Greater(gs.Latitude, 15);
             }
         }
 
@@ -115,42 +97,40 @@ namespace Grib.Api.Tests
         //}
 
         [Test, Timeout(5000)]
-        public void TestBits ()
+        public void TestBits()
         {
-            var bytes = File.ReadAllBytes(".\\TestData\\constant_field.grib2");
-            var msg = GribMessage.Create(bytes);
+            var bytes = File.ReadAllBytes(Settings.CONSTANT2);
+            using var msg = GribMessage.Create(bytes);
             Assert.Greater(msg.ValuesCount, 1);
             foreach (GridCoordinateValue gs in msg.GridCoordinateValues)
             {
                 Assert.Greater(gs.Latitude, 15);
             }
-            msg.Dispose();
         }
 
-        [Test, Timeout(30000)]
-        public void TestStream ()
+        [Ignore("GribStream still don't seem stable")]
+        [Test, Timeout(50000)]
+        public void TestStream()
         {
             //Stopwatch sw = new Stopwatch();
 
-            using (var fs = File.OpenRead(".\\TestData\\mixed.grib"))
+            using var fs = File.OpenRead(Settings.MIXED);
+            //sw.Start();
+            foreach (var msg in new GribStream(fs))
             {
-                //sw.Start();
-                foreach (var msg in new GribStream(fs))
+                Assert.Greater(msg.ValuesCount, 1);
+                foreach (GridCoordinateValue cv in msg.GridCoordinateValues)
                 {
-                    Assert.Greater(msg.ValuesCount, 1);
-                    foreach (GridCoordinateValue cv in msg.GridCoordinateValues)
-                    {
-                        Assert.Greater(cv.Latitude, -180);
-                        Assert.Less(cv.Latitude, 180);
-                    }
+                    Assert.Greater(cv.Latitude, -180);
+                    Assert.Less(cv.Latitude, 180);
                 }
-                //sw.Stop();
-                //Console.WriteLine("Elapsed={0}", sw.Elapsed);
             }
+            //sw.Stop();
+            //Console.WriteLine("Elapsed={0}", sw.Elapsed);
             //sw.Reset();
 
             //sw.Start();
-            //using (GribFile file = new GribFile(".\\TestData\\mixed.grib"))
+            //using (GribFile file = new GribFile(Settings.MIXED))
             //{
             //    foreach (var msg in file)
             //    {
@@ -167,23 +147,52 @@ namespace Grib.Api.Tests
         }
 
         [Test, Timeout(5000)]
-        public void TestOpenPng ()
+        public void TestOpenPng()
         {
-            using (GribFile file = new GribFile(Settings.PNG_COMPRESSION))
-            {
-                Assert.IsTrue(file.MessageCount > 0);
+            using GribFile file = new GribFile(Settings.PNG_COMPRESSION);
+            Assert.IsTrue(file.MessageCount > 0);
 
-                var msg = file.First();
+            using var msg = file.First();
+            try
+            {
+                Assert.IsTrue(msg["packingType"].AsString().ToLower().EndsWith("_png"));
+                Assert.IsTrue(msg.ValuesCount > 0);
+                Assert.IsTrue(msg.GridCoordinateValues.Any());
+                int i = 0;
+                foreach (var v in msg.GridCoordinateValues)
+                {
+                    Assert.AreNotEqual(double.NaN, v.Value);
+                    if (i++ > 1000)
+                        break;
+                }
+            }
+            catch (GribApiException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(msg.ParameterShortName);
+                Console.WriteLine(msg.ToString());
+                Assert.IsTrue(false);
+            }
+        }
+
+        [Test, Timeout(2000)]
+        public void TestOpenComplex()
+        {
+
+            using GribFile file = new GribFile(Settings.COMPLEX_GRID);
+            Assert.IsTrue(file.MessageCount > 0);
+
+            foreach (var msg in file)
+            {
                 try
                 {
-                    Assert.IsTrue(msg["packingType"].AsString().ToLower().EndsWith("_png"));
+                    Assert.IsTrue(msg["packingType"].AsString().ToLower().Contains("complex"));
                     Assert.IsTrue(msg.ValuesCount > 0);
-                    Assert.IsTrue(msg.GridCoordinateValues.Any());
-                    int i = 0;
-                    foreach (var v in msg.GridCoordinateValues)
+                    msg.Values(out double[] vals);
+                    Assert.IsTrue(vals.Any());
+                    foreach (var v in vals)
                     {
-                        Assert.AreNotEqual(Double.NaN, v.Value);
-                        if (i++ > 1000) break;
+                        Assert.AreNotEqual(double.NaN, v);
                     }
                 }
                 catch (GribApiException e)
@@ -197,58 +206,23 @@ namespace Grib.Api.Tests
         }
 
         [Test, Timeout(2000)]
-        public void TestOpenComplex ()
+        public void TestEnumDisposal()
         {
+            using var file1 = new GribFile(Settings.COMPLEX_GRID);
+            using var file2 = new GribFile(Settings.TIME);
+            using var msg1 = file1.First();
+            using var msg2 = file2.First();
 
-            using (GribFile file = new GribFile(Settings.COMPLEX_GRID))
+            var msgEnumerator1 = msg1.GetEnumerator();
+            var msgEnumerator2 = msg2.GetEnumerator();
+            int i = 0;
+            while (msgEnumerator1.MoveNext() && msgEnumerator2.MoveNext())
             {
-                Assert.IsTrue(file.MessageCount > 0);
-
-                foreach (var msg in file)
-                {
-                    try
-                    {
-                        Assert.IsTrue(msg["packingType"].AsString().ToLower().Contains("complex"));
-                        Assert.IsTrue(msg.ValuesCount > 0);
-                        double[] vals;
-                        msg.Values(out vals);
-                        Assert.IsTrue(vals.Any());
-                        foreach (var v in vals)
-                        {
-                            Assert.AreNotEqual(Double.NaN, v);
-                        }
-                    }
-                    catch (GribApiException e)
-                    {
-                        Console.WriteLine(e.Message);
-                        Console.WriteLine(msg.ParameterShortName);
-                        Console.WriteLine(msg.ToString());
-                        Assert.IsTrue(false);
-                    }
-                }
+                i++;
+                Assert.IsNotEmpty(msgEnumerator1.Current.Key);
+                Assert.IsNotEmpty(msgEnumerator2.Current.Key);
             }
-        }
-
-        [Test, Timeout(2000)]
-        public void TestEnumDisposal ()
-        {
-            using (var file1 = new GribFile(Settings.COMPLEX_GRID))
-            using (var file2 = new GribFile(Settings.TIME))
-            {
-                var msg1 = file1.First();
-                var msg2 = file2.First();
-
-                var msgEnumerator1 = msg1.GetEnumerator();
-                var msgEnumerator2 = msg2.GetEnumerator();
-                int i = 0;
-                while (msgEnumerator1.MoveNext() && msgEnumerator2.MoveNext())
-                {
-                    i++;
-                    Assert.IsNotEmpty(msgEnumerator1.Current.Key);
-                    Assert.IsNotEmpty(msgEnumerator2.Current.Key);
-                }
-                Assert.IsTrue(i > 3);
-            }
+            Assert.IsTrue(i > 3);
         }
     }
 }

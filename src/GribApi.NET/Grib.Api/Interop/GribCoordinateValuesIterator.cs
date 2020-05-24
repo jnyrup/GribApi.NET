@@ -27,7 +27,7 @@ namespace Grib.Api.Interop
         /// Initializes a new instance of the <see cref="GribCoordinateValuesIterator"/> class.
         /// </summary>
         /// <param name="h">The h.</param>
-        internal GribCoordinateValuesIterator (IntPtr h)
+        internal GribCoordinateValuesIterator(IntPtr h)
             : base(h)
         {
         }
@@ -38,35 +38,34 @@ namespace Grib.Api.Interop
         /// <param name="isMissingFlag">The is missing flag.</param>
         /// <param name="gsVal">The gs value.</param>
         /// <returns>False if there are no more values.</returns>
-        public bool Next (double isMissingFlag, out GridCoordinateValue gsVal)
+        public bool Next(double isMissingFlag, out GridCoordinateValue gsVal)
         {
-            double lat, lon, val;
-            bool success = GribApiProxy.GribIteratorNext(this, out lat, out lon, out val) != 0;
+            bool success = GribApiProxy.GribIteratorNext(this, out double lat, out double lon, out double val) != 0;
 
             gsVal = new GridCoordinateValue(lat, lon, val, val == isMissingFlag);
 
             return success;
         }
 
-		/// <summary>
-		/// Rewinds this instance.
-		/// </summary>
-		public void Rewind ()
-		{
-			GribApiProxy.GribIteratorReset(this);
-		}
+        /// <summary>
+        /// Rewinds this instance.
+        /// </summary>
+        public void Rewind()
+        {
+            GribApiProxy.GribIteratorReset(this);
+        }
 
         /// <summary>
         /// Called when [dispose].
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected override void OnDispose (bool disposing)
+        protected override void OnDispose(bool disposing)
         {
-			if (this.pReference != IntPtr.Zero)
-			{
-				this.Rewind();
-				GribApiProxy.GribIteratorDelete(this);
-			}
+            if (pReference != IntPtr.Zero)
+            {
+                Rewind();
+                GribApiProxy.GribIteratorDelete(this);
+            }
 
         }
 
@@ -76,11 +75,10 @@ namespace Grib.Api.Interop
         /// <param name="h">The handle of the message to iterate.</param>
         /// <param name="filters">The filters.</param>
         /// <returns></returns>
-        public static GribCoordinateValuesIterator Create (GribHandle h, uint filters)
+        public static GribCoordinateValuesIterator Create(GribHandle h, uint filters)
         {
-            int err = 0;
 
-            GribCoordinateValuesIterator iter = GribApiProxy.GribIteratorNew(h, filters, out err);
+            GribCoordinateValuesIterator iter = GribApiProxy.GribIteratorNew(h, filters, out int err);
 
             if (err != 0)
             {

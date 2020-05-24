@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Grib.Api.Interop.SWIG;
 
 namespace Grib.Api.Interop
@@ -19,9 +20,9 @@ namespace Grib.Api.Interop
     /// <summary>
     /// A subdomain of field measurements.
     /// </summary>
-    public class GribBox
+    public class GribBox : IDisposable
     {
-        private GribPoints _points;
+        private readonly GribPoints _points;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GribBox"/> class.
@@ -29,10 +30,9 @@ namespace Grib.Api.Interop
         /// <param name="msgHandle">The MSG handle.</param>
         /// <param name="nw">The nw.</param>
         /// <param name="se">The se.</param>
-        public GribBox (GribHandle msgHandle, GridCoordinate nw, GridCoordinate se)
+        public GribBox(GribHandle msgHandle, GridCoordinate nw, GridCoordinate se)
         {
-            int err;
-            var box = GribApiProxy.GribBoxNew(msgHandle, out err);
+            var box = GribApiProxy.GribBoxNew(msgHandle, out int err);
 
             if (err != 0)
             {
@@ -57,14 +57,8 @@ namespace Grib.Api.Interop
         /// </value>
         public double[] Latitudes
         {
-            set
-            {
-                _points.latitudes = value;
-            }
-            get
-            {
-                return _points.latitudes;
-            }
+            set => _points.latitudes = value;
+            get => _points.latitudes;
         }
 
         /// <summary>
@@ -75,14 +69,8 @@ namespace Grib.Api.Interop
         /// </value>
         public double[] Longitudes
         {
-            set
-            {
-                _points.longitudes = value;
-            }
-            get
-            {
-                return _points.longitudes;
-            }
+            set => _points.longitudes = value;
+            get => _points.longitudes;
         }
 
         /// <summary>
@@ -93,14 +81,8 @@ namespace Grib.Api.Interop
         /// </value>
         public uint Indexes
         {
-            set
-            {
-                _points.indexes = value;
-            }
-            get
-            {
-                return _points.indexes;
-            }
+            set => _points.indexes = value;
+            get => _points.indexes;
         }
 
         /// <summary>
@@ -111,14 +93,8 @@ namespace Grib.Api.Interop
         /// </value>
         public uint GroupStart
         {
-            set
-            {
-                _points.groupStart = value;
-            }
-            get
-            {
-                return _points.groupStart;
-            }
+            set => _points.groupStart = value;
+            get => _points.groupStart;
         }
 
         /// <summary>
@@ -129,14 +105,8 @@ namespace Grib.Api.Interop
         /// </value>
         public uint GroupLength
         {
-            set
-            {
-                _points.groupLen = value;
-            }
-            get
-            {
-                return _points.groupLen;
-            }
+            set => _points.groupLen = value;
+            get => _points.groupLen;
         }
 
         /// <summary>
@@ -147,14 +117,8 @@ namespace Grib.Api.Interop
         /// </value>
         public uint GroupCount
         {
-            set
-            {
-                _points.nGroups = value;
-            }
-            get
-            {
-                return _points.nGroups;
-            }
+            set => _points.nGroups = value;
+            get => _points.nGroups;
         }
 
         /// <summary>
@@ -165,14 +129,8 @@ namespace Grib.Api.Interop
         /// </value>
         public uint Count
         {
-            set
-            {
-                _points.n = value;
-            }
-            get
-            {
-                return _points.n;
-            }
+            set => _points.n = value;
+            get => _points.n;
         }
 
         /// <summary>
@@ -183,14 +141,41 @@ namespace Grib.Api.Interop
         /// </value>
         public uint Size
         {
-            set
+            set => _points.size = value;
+            get => _points.size;
+        }
+
+        #region IDisposable Support
+        public bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
             {
-                _points.size = value;
-            }
-            get
-            {
-                return _points.size;
+                if (disposing)
+                {
+                    _points?.Dispose();
+                }
+
+                disposedValue = true;
+
             }
         }
+
+        ~GribBox()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

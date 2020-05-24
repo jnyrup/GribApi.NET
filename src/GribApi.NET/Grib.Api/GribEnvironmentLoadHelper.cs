@@ -22,11 +22,10 @@ namespace Grib.Api
 {
     internal static class GribEnvironmentLoadHelper
     {
-        internal static AutoRef BootStrapLibrary ()
+        internal static AutoRef BootStrapLibrary()
         {
-            string path = "";
 
-            if (!TryFindBootstrapLibrary(out path))
+            if (!TryFindBootstrapLibrary(out string path))
             {
                 throw new FileNotFoundException("Could not find Grib.Api.Native. Please see GribApi.NET's documentation for help.");
             }
@@ -34,10 +33,8 @@ namespace Grib.Api
             return Win32.LoadWin32Library(path);
         }
 
-        internal static bool TryFindBootstrapLibrary (out string path)
+        internal static bool TryFindBootstrapLibrary(out string path)
         {
-            path = "";
-
             // TODO: make cross platform
             string binaryType = "dll";
             string file = "Grib.Api.Native." + binaryType;
@@ -49,27 +46,26 @@ namespace Grib.Api
             return TryBuildDescriptorPath(gribNativeLibPath, out path);
         }
 
-        internal static bool TryFindDefinitions (out string path)
+        internal static bool TryFindDefinitions(out string path)
         {
             return TryBuildDescriptorPath("Grib.Api\\definitions", out path);
         }
 
-        internal static bool TryBuildDescriptorPath (string target, out string path)
+        internal static bool TryBuildDescriptorPath(string target, out string path)
         {
-            path = "";
-			target += "";
+            target += "";
 
-            string thisDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)+"", target);
-            string baseDomainDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory+"", target);
-			string relDomainDir = Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath+"", target);
+            string thisDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "", target);
+            string baseDomainDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "", target);
+            string relDomainDir = Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath + "", target);
 
-			return TryBuildGriApiPath(thisDir, out path) ||
-				   TryBuildGriApiPath(relDomainDir, out path) ||      // try using the directory that contains this binary
-				   TryBuildGriApiPath(baseDomainDir, out path) ||	  // try using the directory that contains the exe
-				   TryBuildGriApiPath(target, out path);              // try using relative path;      
+            return TryBuildGriApiPath(thisDir, out path) ||
+                   TryBuildGriApiPath(relDomainDir, out path) ||      // try using the directory that contains this binary
+                   TryBuildGriApiPath(baseDomainDir, out path) ||     // try using the directory that contains the exe
+                   TryBuildGriApiPath(target, out path);              // try using relative path;      
         }
 
-        internal static bool TryBuildGriApiPath (string root, out string path)
+        internal static bool TryBuildGriApiPath(string root, out string path)
         {
             path = "";
 
@@ -78,7 +74,7 @@ namespace Grib.Api
                 path = Path.GetFullPath(root);
             }
 
-            return !String.IsNullOrWhiteSpace(path);
+            return !string.IsNullOrWhiteSpace(path);
         }
     }
 }

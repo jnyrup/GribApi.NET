@@ -43,8 +43,8 @@ namespace Grib.Api
         /// <param name="lon">The lon.</param>
         public GridCoordinate(double lat, double lon) : this()
         {
-            this.Latitude = lat;
-            this.Longitude = lon;
+            Latitude = lat;
+            Longitude = lon;
         }
 
         /// <summary>
@@ -52,22 +52,22 @@ namespace Grib.Api
         /// </summary>
         /// <param name="that">The that.</param>
         /// <returns></returns>
-        public bool Equals (GridCoordinate that)
+        public bool Equals(GridCoordinate that)
         {
-            return (this.Latitude == that.Latitude) &&
-                   (this.Longitude == that.Longitude);
+            return (Latitude == that.Latitude) &&
+                   (Longitude == that.Longitude);
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// Determines whether the specified <see cref="object" />, is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        ///   <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals (object obj)
+        public override bool Equals(object obj)
         {
-            return (obj is GridCoordinate) && this.Equals((GridCoordinate)obj);
+            return (obj is GridCoordinate) && Equals((GridCoordinate)obj);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Grib.Api
         /// </returns>
         public override int GetHashCode()
         {
-            return this.Latitude.GetHashCode() ^ this.Longitude.GetHashCode();
+            return Latitude.GetHashCode() ^ Longitude.GetHashCode();
         }
 
         /// <summary>
@@ -89,9 +89,9 @@ namespace Grib.Api
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator == (GridCoordinate a, GridCoordinate b)
+        public static bool operator ==(GridCoordinate a, GridCoordinate b)
         {
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
@@ -107,7 +107,7 @@ namespace Grib.Api
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator != (GridCoordinate a, GridCoordinate b)
+        public static bool operator !=(GridCoordinate a, GridCoordinate b)
         {
             return !(a.Equals(b));
         }

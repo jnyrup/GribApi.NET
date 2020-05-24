@@ -22,26 +22,21 @@ namespace Grib.Api.Interop
     /// </summary>
     public class GribContext : AutoRef
     {
-		public static GribContext Default
-        {
-            get
-            {
-                if (_default == null)
-                {
-                    GribEnvironment.Init();
-                    _default = GribApiProxy.GribContextGetDefault();
-                }
-                return _default;
-            }
+        public static GribContext Default => _default ??= CreateContext();
 
+        private static GribContext CreateContext()
+        {
+            GribEnvironment.Init();
+            return GribApiProxy.GribContextGetDefault();
         }
+
         private static GribContext _default = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GribContext"/> class.
         /// </summary>
         /// <param name="h">The h.</param>
-        public GribContext (IntPtr h)
+        public GribContext(IntPtr h)
             : base(h)
         {
         }
@@ -50,7 +45,7 @@ namespace Grib.Api.Interop
         /// Called when [dispose].
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected override void OnDispose (bool disposing)
+        protected override void OnDispose(bool disposing)
         {
             // This causes AccessViolation when disposing
             // GribApiProxy.GribContextDelete(this);
@@ -64,20 +59,24 @@ namespace Grib.Api.Interop
         /// </value>
         public bool EnableMultipleFieldMessages
         {
-            get { return _enableMultipleFieldMessages; }
-            set
-            {
-                if (value)
-                {
-                    GribApiProxy.GribMultiSupportOn(this);
-                } else
-                {
-                    GribApiProxy.GribMultiSupportOff(this);
-                }
-
-                _enableMultipleFieldMessages = value;
-            }
+            get => _enableMultipleFieldMessages;
+            set => SetEnableMultipleFieldMessages(value);
         }
+
+        private void SetEnableMultipleFieldMessages(bool value)
+        {
+            if (value)
+            {
+                GribApiProxy.GribMultiSupportOn(this);
+            }
+            else
+            {
+                GribApiProxy.GribMultiSupportOff(this);
+            }
+
+            _enableMultipleFieldMessages = value;
+        }
+
         private bool _enableMultipleFieldMessages = false;
     }
 }

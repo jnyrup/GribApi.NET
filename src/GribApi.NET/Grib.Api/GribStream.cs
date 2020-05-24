@@ -18,36 +18,36 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Grib.Api.Tests")]
 namespace Grib.Api
 {
     /// <summary>
     /// Light wrapper for streams. The current implementation is slower than 
     /// reading from file, but is provided for convenience.
     /// </summary>
-    public class GribStream: IEnumerable<GribMessage>
+    internal class GribStream : IEnumerable<GribMessage>
     {
-        static readonly byte[] GRIB_MSG_START = { 0x47, 0x52, 0x49, 0x42 };
-        static readonly byte[] GRIB_MSG_END_GTS = { 0x0D, 0x0D, 0x0A, 0x03 };
-        static readonly byte[] GRIB_MSG_END = { 0x37, 0x37, 0x37, 0x37 };
+        private static readonly byte[] GRIB_MSG_START = { 0x47, 0x52, 0x49, 0x42 };
 
         //protected byte[] Buffer;
         protected Stream Stream;
 
-        static GribStream ()
+        static GribStream()
         {
             GribEnvironment.Init();
         }
 
-        public GribStream (Stream stream)
+        public GribStream(Stream stream)
         {
-            this.Stream = stream;
+            Stream = stream;
         }
 
-        protected GribMessage GetNextMessage (int index)
+        protected GribMessage GetNextMessage(int index)
         {
             // the starting position of the stream
-            var streamStartPos = this.Stream.Position;
+            var streamStartPos = Stream.Position;
             // if there are headers in the file, the message may not align with the beginning of the stream
             // or the end of the previous message.
             long msgOffset = 0;
@@ -66,14 +66,14 @@ namespace Grib.Api
 
             bool foundStart = false;
 
-            while (this.Stream.Position + 1 < this.Stream.Length && !foundStart)
+            while (Stream.Position + 1 < Stream.Length && !foundStart)
             {
-                msgOffset = this.Stream.Position;
+                msgOffset = Stream.Position;
 
-                if (this.Stream.ReadByte() == GRIB_MSG_START[0])
+                if (Stream.ReadByte() == GRIB_MSG_START[0])
                 {
-                    this.Stream.Seek(-1, SeekOrigin.Current);
-                    this.Stream.Read(buffer32, 0, 4);
+                    Stream.Seek(-1, SeekOrigin.Current);
+                    Stream.Read(buffer32, 0, 4);
 
                     if (buffer32.SequenceEqual(GRIB_MSG_START))
                     {
@@ -81,19 +81,20 @@ namespace Grib.Api
                     }
                     else
                     {
-                        this.Stream.Seek(msgOffset + 1, SeekOrigin.Begin);
+                        Stream.Seek(msgOffset + 1, SeekOrigin.Begin);
                     }
                 }
             }
 
-            if (!foundStart) { return null; }
+            if (!foundStart)
+            { return null; }
 
             // at this point, the stream should be pointing to the "B" octet in the "GRIB" sequence
             // if this is an edition 1, the next 3 bytes are the length of the message
-            this.Stream.Read(buffer24, 0, 3);
+            Stream.Read(buffer24, 0, 3);
 
             // get the edition number and read the message length per ed spec
-            var ed = this.Stream.ReadByte();
+            var ed = Stream.ReadByte();
 
             if (ed == 0)
             {
@@ -106,7 +107,7 @@ namespace Grib.Api
             }
             else if (ed == 2)
             {
-                this.Stream.Read(buffer64, 0, 8);
+                Stream.Read(buffer64, 0, 8);
             }
 
             if (BitConverter.IsLittleEndian)
@@ -115,13 +116,16 @@ namespace Grib.Api
             }
 
             long msgLen = BitConverter.ToInt64(buffer64, 0);
-            long end = msgLen + streamStartPos;
+
+            // TODO: unused end
+            // long end = msgLen + streamStartPos;
+
             // get the length of the message, including any headers
             long totalLen = (msgOffset - streamStartPos) + msgLen;
 
-            this.Stream.Seek(streamStartPos, SeekOrigin.Begin);
+            Stream.Seek(streamStartPos, SeekOrigin.Begin);
             byte[] msgBytes = new byte[totalLen];
-            this.Stream.Read(msgBytes, 0, (int)totalLen);
+            Stream.Read(msgBytes, 0, (int)totalLen);
 
             return GribMessage.Create(msgBytes);
         }
@@ -129,9 +133,9 @@ namespace Grib.Api
         /// <summary>
         /// Resets the underlying pointer to the beginning of the stream.
         /// </summary>
-        public void Rewind ()
+        public void Rewind()
         {
-            this.Stream.Seek(0, SeekOrigin.Begin);
+            Stream.Seek(0, SeekOrigin.Begin);
         }
 
         /// <summary>
@@ -140,18 +144,18 @@ namespace Grib.Api
         /// <returns>
         /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
         /// </returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        IEnumerator IEnumerable.GetEnumerator ()
+        /// <exception cref="NotImplementedException"></exception>
+        IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerator<GribMessage> GetEnumerator ()
+        public IEnumerator<GribMessage> GetEnumerator()
         {
             GribMessage msg;
             int i = 0;
 
-            while ((msg = this.GetNextMessage(i++)) != null)
+            while ((msg = GetNextMessage(i++)) != null)
             {
                 yield return msg;
             }
